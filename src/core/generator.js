@@ -1,8 +1,9 @@
 import chai from 'chai'
+import winston from 'winston'
 import { solutionResolverByFile } from './solutions'
 
 const processTest = (test, i, path, solutionResolver) => {
-  console.log('Processing test with path', path)
+  winston.log('debug', 'Processing test with path', path, 'and solution resolver', solutionResolver);
   const solution = solutionResolver(path)
   solution.it(`test #${i + 1}`, () => {
     // TODO: sandbox tests ?
@@ -12,7 +13,8 @@ const processTest = (test, i, path, solutionResolver) => {
 }
 
 const processHeading = (heading, path, solutionResolver) => describe(heading.title, () => {
-  (heading.children || []).forEach(c => processHeading(c, path.concat([c.title], solutionResolver)));
+  winston.log('debug', 'Processing Heading with path', path, 'and solution resolver', solutionResolver);
+  (heading.children || []).forEach(c => processHeading(c, path.concat([c.title]), solutionResolver));
   (heading.tests || []).forEach((t, i) => processTest(t, i, path, solutionResolver));
 })
 

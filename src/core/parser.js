@@ -73,7 +73,9 @@ class ParsingStack {
       })
       return list
     }
-    return removeDepth(this.stack[0].children)
+
+    removeDepth(this.stack)
+    return this.stack[0]
   }
 }
 
