@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import generator from '../src/core/generator'
-import { noSolution } from '../src/core/solutions'
+import { noSolution, solutionByFunction } from '../src/core/solutions'
 
 describe.only('Test generator', () => {
 
@@ -42,6 +42,26 @@ describe.only('Test generator', () => {
         ]
       }
       const test = generatorWithOutSolution(model)
+      expect(test.tests).not.to.be.equal(undefined)
+      expect(test.tests.length).to.be.equal(1)
+      expect(test.tests[0].type).to.be.equal('test')
+      expect(test.tests[0].title).to.be.equal('test #1')
+    })
+
+  })
+
+  describe('Tests using solutions', () => {
+
+    it('a test can acccess a solution variable', () => {
+      const model = {
+        title: 'Sum + 1',
+        children: [],
+        tests: [
+          { code: 'expect(solution(6)).to.be.equal(7)' }
+        ]
+      }
+      const solution = a => a + 1
+      const test = generator(model, solutionByFunction(solution))
       expect(test.tests).not.to.be.equal(undefined)
       expect(test.tests.length).to.be.equal(1)
       expect(test.tests[0].type).to.be.equal('test')

@@ -24,7 +24,12 @@ export const solutionResolverByFile = (...path) => {
 }
 
 //
-// Dummy no solution
+// Dummy no solutions
 //
 
 export const noSolution = () => ({ it })
+
+export const solutionByFunction = fn => () => {
+  fn.it = it
+  return fn
+}

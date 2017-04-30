@@ -5,7 +5,6 @@ const processTest = (test, i, path, solutionResolver) => {
   console.log('Processing test with path', path)
   const solution = solutionResolver(path)
   solution.it(`test #${i + 1}`, () => {
-    // TODO: import implementation function
     // TODO: sandbox tests ?
     const expect = chai.expect
     eval(test.code)
