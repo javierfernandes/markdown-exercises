@@ -1,0 +1,24 @@
+# http://devcenter.wercker.com/docs/containers/index.html
+box: node
+
+build:
+  steps:
+    - script:
+      name: set yarn cache
+      code: |
+        export YARN_CACHE=$WERCKER_CACHE_DIR/yarn
+
+    - script:
+      name: install dependencies
+      code: |
+        HOME=$YARN_CACHE yarn
+
+    - script:
+        name: run tests
+        code: |
+          yarn test
+
+    - script:
+        name: lint
+        code:
+          yarn lint-src
