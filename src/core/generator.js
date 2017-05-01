@@ -7,6 +7,7 @@ const processTest = (path, solutionResolver) => (test, i) => {
   const solution = solutionResolver(path)
   solution.it(`test #${i + 1}`, () => {
     // TODO: sandbox tests ?
+    /* eslint no-unused-vars: 0 no-eval: 0 */
     const expect = chai.expect
     eval(test.code)
   })
