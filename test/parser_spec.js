@@ -6,19 +6,21 @@ chai.config.truncateThreshold = 0
 
 describe('Excercises markdown parser', () => {
 
+  const withRoot = children => ({ title: 'Root', children })
+
   describe('Parsing headings', () => {
 
     it('basic parsing with marked to understand AST', () => {
       const content = 
-  `# Lists
-  This sections is about Lists
+`# Lists
+This sections is about Lists
 
-  ## Map
-  We will se now the map() method
+## Map
+We will se now the map() method
 
-  \`\`\`assertion
-  const a = [1, 2, 3]
-  \`\`\`
+\`\`\`assertion
+const a = [1, 2, 3]
+\`\`\`
 
   `.toString()
       const parsed = marked.lexer(content)
@@ -37,11 +39,11 @@ describe('Excercises markdown parser', () => {
   # Collections
   blaha
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           {
             title: 'Collections', children: []
           }
-        ])
+        ]))
       })
 
       it('should assemble two simple 1 level depth tree of headings', () => {
@@ -53,10 +55,10 @@ describe('Excercises markdown parser', () => {
   # Objects
   blaha
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           { title: 'Collections', children: [] },
           { title: 'Objects', children: [] }
-        ])
+        ]))
       })
 
       it('should assemble a simple 2 level depth tree of headings', () => {
@@ -68,14 +70,14 @@ describe('Excercises markdown parser', () => {
   ## Lists
   blaha
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           { 
             title: 'Collections', 
             children: [
               { title: 'Lists', children: [] }
             ]
           }
-        ])
+        ]))
       })
 
           it('should support a 1st level heading after a 2nd level', () => {
@@ -90,7 +92,7 @@ describe('Excercises markdown parser', () => {
   # IO
   really
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           { 
             title: 'Collections', 
             children: [
@@ -98,7 +100,7 @@ describe('Excercises markdown parser', () => {
             ]
           },
           { title: 'IO', children: [] }
-        ])
+        ]))
       })
 
       it('should support a 1st level heading after a 3nd level', () => {
@@ -116,7 +118,7 @@ describe('Excercises markdown parser', () => {
   # IO
   really
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           { 
             title: 'Collections', 
             children: [
@@ -126,7 +128,7 @@ describe('Excercises markdown parser', () => {
             ]
           },
           { title: 'IO', children: [] }
-        ])
+        ]))
       })
 
       it('should support skipping a heading level, from 1 to 3', () => {
@@ -138,14 +140,14 @@ describe('Excercises markdown parser', () => {
   ### Filter
   filtering blah
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           { 
             title: 'Collections', 
             children: [
               { title: 'Filter', children: [] }
             ]
           }
-        ])
+        ]))
       })
 
         it('should support skipping heading 1 => 2 => 3, then => 2 again, => 3, and 1', () => {
@@ -165,7 +167,7 @@ describe('Excercises markdown parser', () => {
 
   # IO
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           { 
             title: 'Collections', 
             children: [
@@ -178,7 +180,7 @@ describe('Excercises markdown parser', () => {
             ]
           },
           { title: 'IO', children: [] }
-        ])
+        ]))
       })
 
       it('should assemble a 3 level depth tree of headings', () => {
@@ -195,7 +197,7 @@ describe('Excercises markdown parser', () => {
   ### Reduce
   adsad
   `
-        expect(excersiceParser(content)).to.deep.equal([
+        expect(excersiceParser(content)).to.deep.equal(withRoot([
           {
             title: 'Collections', children: [
               { 
@@ -207,7 +209,7 @@ describe('Excercises markdown parser', () => {
               }
             ]
           }
-        ])
+        ]))
       })
 
     })
@@ -222,20 +224,19 @@ describe('Excercises markdown parser', () => {
 # Map
 
 \`\`\`js
-// test
-expect(fn([1, 2, 3, 4])).to.deep.equal([2, 4, , 6, 8])
+expect(fn([1, 2, 3, 4])).to.deep.equal([2, 4, 6, 8])
 \`\`\`
 `
       // expect(excersiceParser(content)[0]).to.deep.equal({})
-      expect(excersiceParser(content)).to.deep.equal([
+      expect(excersiceParser(content)).to.deep.equal(withRoot([
         {
           title: 'Map', 
           children: [],
           tests: [
-            { lang: '', text: 'expect(fn([1, 2, 3, 4])).to.deep.equal([2, 4, , 6, 8])' }
+            { lang: 'js', code: 'expect(fn([1, 2, 3, 4])).to.deep.equal([2, 4, 6, 8])' }
           ]
         }
-      ])
+      ]))
     })
 
   })

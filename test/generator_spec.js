@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import generator from '../src/core/generator'
 import { noSolution, solutionByFunction } from '../src/core/solutions'
 
-describe.only('Test generator', () => {
+describe('Test generator', () => {
 
   describe('Titles to describe (no solution)', () => {
 
